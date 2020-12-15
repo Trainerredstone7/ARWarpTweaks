@@ -1,0 +1,16 @@
+[
+{
+  "modid": "arwarptweaks",
+  "name": "AR Warp Tweaks",
+  "description": "Adds a dilithium cost when a rocket warps to another planet, and adds blocks to facilitate warp automation.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["TrainerRedstone7"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": [advancedrocketry, libvulpes]
+}
+]
