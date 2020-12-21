@@ -14,8 +14,10 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import trainerredstone7.arwarptweaks.block.BlockDilithiumStorage;
+import trainerredstone7.arwarptweaks.proxy.GuiHandler;
 import trainerredstone7.arwarptweaks.proxy.IProxy;
 import trainerredstone7.arwarptweaks.tile.TileDilithiumStorage;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
@@ -30,7 +32,7 @@ public class ARWarpTweaks
 {
     public static final String MODID = "arwarptweaks";
     public static final String NAME = "AR Warp Tweaks";
-    public static final String VERSION = "0.1";
+    public static final String VERSION = "0.1.1";
 
     public static Logger logger;
 
@@ -54,6 +56,7 @@ public class ARWarpTweaks
     @EventHandler
     public void init(FMLInitializationEvent e) {
     	proxy.init(e);
+    	NetworkRegistry.INSTANCE.registerGuiHandler(ARWarpTweaks.instance, new GuiHandler());
     }
     
     

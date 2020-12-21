@@ -1,6 +1,7 @@
 package trainerredstone7.arwarptweaks.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -19,8 +20,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import trainerredstone7.arwarptweaks.ARWarpTweaks;
 import trainerredstone7.arwarptweaks.tile.TileDilithiumStorage;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 
-public class BlockDilithiumStorage extends Block {
+public class BlockDilithiumStorage extends Block implements ITileEntityProvider {
 
 	public BlockDilithiumStorage() {
 		super(Material.ROCK);
@@ -32,6 +35,7 @@ public class BlockDilithiumStorage extends Block {
 		setDefaultState(blockState.getBaseState());
 	}
 	
+	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileDilithiumStorage();
 	}
@@ -41,7 +45,7 @@ public class BlockDilithiumStorage extends Block {
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side,
                 float hitX, float hitY, float hitZ) {
         // Only execute on the server
-        if (!world.isRemote) {
+    	if (!world.isRemote) {
         	TileEntity te = world.getTileEntity(pos);
         	if (!(te instanceof TileDilithiumStorage)) {
         		return false;
