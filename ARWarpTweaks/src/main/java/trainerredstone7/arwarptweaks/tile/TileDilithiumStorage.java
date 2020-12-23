@@ -14,9 +14,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import trainerredstone7.arwarptweaks.ARWarpTweaks;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 
 public class TileDilithiumStorage extends TileEntity {
 	public static final int SIZE = 1;
+	private int fuel = 0;
+	public static final int MAX_FUEL = 1000;
 	
 	/*
 	 * The following methods are all adapted from McJty's 1.12 modding tutorials.
@@ -24,18 +27,29 @@ public class TileDilithiumStorage extends TileEntity {
 	private ItemStackHandler itemHandler = new ItemStackHandler(SIZE) {
 		@Override
 		protected void onContentsChanged(int slot) {
-			TileDilithiumStorage.this.markDirty();
-		}
-		
-		@Override
-		protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
-			return Integer.MAX_VALUE;
+			/*
+			 * Convert dilithium into warp fuel
+			 * TODO: see if there is a better place to put this
+			 */
+			ItemStack stack = getStackInSlot(slot);
+			if (isWarpFuel(stack)) {
+				int stackSize = stack.getCount();
+				int fuelPerItem = ARConfiguration.getCurrentConfig().fuelPointsPerDilithium;
+				int extractCount = Math.min((MAX_FUEL-fuel)/fuelPerItem, stackSize);
+				fuel += extractCount*fuelPerItem;
+				extractItem(slot, extractCount, false);
+			}
+			markDirty();
 		}
 		
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			ARWarpTweaks.logger.info("test");
 			//the inventory can only hold dilithium
-			if(isWarpFuel(stack)) return super.insertItem(slot, stack, simulate);
+			if(isWarpFuel(stack)) {
+				ItemStack remaining = super.insertItem(slot, stack, simulate);
+				return remaining;
+			}
 			else return stack;
 		}
 	};
@@ -77,5 +91,9 @@ public class TileDilithiumStorage extends TileEntity {
     
     public static boolean isWarpFuel(ItemStack stack) {
     	return OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("GEM")), stack, false);
+    }
+    
+    public int getFuel() {
+    	return fuel;
     }
 }

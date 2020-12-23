@@ -29,7 +29,7 @@ public class GuiHandler implements IGuiHandler {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof TileDilithiumStorage) {
             TileDilithiumStorage containerTileEntity = (TileDilithiumStorage) te;
-            return new GuiDilithiumStorage(new ContainerDilithiumStorage(player.inventory, containerTileEntity));
+            return new GuiDilithiumStorage(containerTileEntity, new ContainerDilithiumStorage(player.inventory, containerTileEntity));
         }
         return null;
 	}

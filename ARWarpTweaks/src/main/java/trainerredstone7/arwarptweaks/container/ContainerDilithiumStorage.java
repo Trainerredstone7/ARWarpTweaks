@@ -48,8 +48,7 @@ public class ContainerDilithiumStorage extends Container {
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        //TODO: change these slots, they were from old code
-        addSlotToContainer(new SlotItemHandler(itemHandler, 0, 97, 38));
+        addSlotToContainer(new SlotItemHandler(itemHandler, 0, 80, 33));
     }
     
     @Override
