@@ -1,10 +1,12 @@
 package trainerredstone7.arwarptweaks.tile;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,7 +24,7 @@ public class TileDilithiumStorage extends TileEntity {
 	public static final int MAX_FUEL = 1000;
 	
 	/*
-	 * The following methods are all adapted from McJty's 1.12 modding tutorials.
+	 * Many of the following methods are adapted from McJty's 1.12 modding tutorials.
 	 */
 	private ItemStackHandler itemHandler = new ItemStackHandler(SIZE) {
 		@Override
@@ -44,11 +46,9 @@ public class TileDilithiumStorage extends TileEntity {
 		
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			ARWarpTweaks.logger.info("test");
 			//the inventory can only hold dilithium
 			if(isWarpFuel(stack)) {
-				ItemStack remaining = super.insertItem(slot, stack, simulate);
-				return remaining;
+				return super.insertItem(slot, stack, simulate);
 			}
 			else return stack;
 		}
@@ -60,13 +60,35 @@ public class TileDilithiumStorage extends TileEntity {
         if (compound.hasKey("items")) {
             itemHandler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
         }
+        if (compound.hasKey("fuel")) {
+        	fuel = compound.getInteger("fuel");
+        }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setTag("items", itemHandler.serializeNBT());
+        compound.setInteger("fuel", fuel);
         return compound;
+    }
+    
+    @Override
+    public NBTTagCompound getUpdateTag() {
+    	NBTTagCompound nbtTag = super.getUpdateTag();
+    	nbtTag.setInteger("fuel", fuel);
+    	return nbtTag;
+    }
+    
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+    	return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
+    }
+    
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+    	fuel = packet.getNbtCompound().getInteger("fuel");
     }
 
     @Override

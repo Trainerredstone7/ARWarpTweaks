@@ -39,7 +39,6 @@ public class GuiDilithiumStorage extends GuiContainer {
 	private void drawFuel() {
 		GlStateManager.disableLighting();
 		drawCenteredStringNoShadow(fontRenderer, "Fuel: " + tile.getFuel(), guiLeft + 88, guiTop + 54, 0xFF000000);
-//		fontRenderer.drawString("Fuel: " + tile.getFuel(), guiLeft + 84 - fontRenderer.getStringWidth(text), guiTop + 54, 0xFF000000);
 		GlStateManager.enableLighting();
 	}
 	
