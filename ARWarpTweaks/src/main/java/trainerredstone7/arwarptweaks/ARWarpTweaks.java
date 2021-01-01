@@ -2,10 +2,14 @@ package trainerredstone7.arwarptweaks;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.common.Mod;
@@ -80,6 +84,8 @@ public class ARWarpTweaks
     	event.getRegistry().register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
     }
     
+    public static final int MESSAGE_RADIUS = 10;
+    
     @SubscribeEvent
     public static void burnWarpFuel(RocketPreLaunchEvent event) {
     	if (!(event.getEntity() instanceof EntityRocket)) return; //if the rocket isn't an EntityRocket we can't check its inventory anyways
@@ -97,8 +103,13 @@ public class ARWarpTweaks
     	}
     	else {
     		event.setCanceled(true);
+    		if(!rocket.world.isRemote) {
+    			AxisAlignedBB messageArea = new AxisAlignedBB(new BlockPos(rocket.posX, rocket.posY, rocket.posZ)).grow(MESSAGE_RADIUS);
+    			for (EntityPlayer player : rocket.world.getEntitiesWithinAABB(EntityPlayer.class, messageArea)) {
+    				player.sendMessage(new TextComponentString("Not enough fuel in dilithium storages! Need " + (cost - fuel) + "more."));
+    			}
+    		}
     	}
-    	
     }
     
 }
