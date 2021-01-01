@@ -46,7 +46,10 @@ dependencies {
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
+	
+	compile 'curse.maven:libvulpes:2949886'
+	compile 'curse.maven:advanced-rocketry:3015079'
+	
     // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
     //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
@@ -55,7 +58,7 @@ dependencies {
     //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     
-    deobfProvided 'curse.maven:libvulpes:2949886'
+    deobfProvided 'curse.maven:libvulpes:2949887'
 	deobfProvided 'curse.maven:advanced-rocketry:3015080'
 
     // for more info...
