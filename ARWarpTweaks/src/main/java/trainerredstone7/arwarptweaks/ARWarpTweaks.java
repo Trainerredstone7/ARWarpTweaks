@@ -20,9 +20,14 @@ import trainerredstone7.arwarptweaks.block.BlockDilithiumStorage;
 import trainerredstone7.arwarptweaks.proxy.GuiHandler;
 import trainerredstone7.arwarptweaks.proxy.IProxy;
 import trainerredstone7.arwarptweaks.tile.TileDilithiumStorage;
+import trainerredstone7.arwarptweaks.utils.WarpUtils;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Logger;
 
@@ -75,12 +80,25 @@ public class ARWarpTweaks
     	event.getRegistry().register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
     }
     
-    //TODO: Need to finish this
     @SubscribeEvent
     public static void burnWarpFuel(RocketPreLaunchEvent event) {
     	if (!(event.getEntity() instanceof EntityRocket)) return; //if the rocket isn't an EntityRocket we can't check its inventory anyways
     	EntityRocket rocket = (EntityRocket) event.getEntity();
-    	StorageChunk storage = rocket.storage;
+    	List<TileDilithiumStorage> dsTiles = rocket.storage.getTileEntityList().stream()
+    			.filter(p -> p instanceof TileDilithiumStorage).map(p -> (TileDilithiumStorage) p).collect(Collectors.toList());
+    	int cost = WarpUtils.getTravelCost(rocket);
+    	int fuel = dsTiles.stream().reduce(0, (p,q) -> p + q.getFuel(), (p,q) -> p + q);
+    	if (fuel >= cost) {
+    		//Have enough fuel, so remove fuel from storages sequentially until cost is fulfilled
+    		for (TileDilithiumStorage tileDilithiumStorage : dsTiles) {
+    			cost = tileDilithiumStorage.drainFuel(cost);
+    			if (cost == 0) break;
+    		}
+    	}
+    	else {
+    		event.setCanceled(true);
+    	}
+    	
     }
     
 }

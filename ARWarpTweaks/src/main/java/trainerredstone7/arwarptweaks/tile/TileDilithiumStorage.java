@@ -118,4 +118,15 @@ public class TileDilithiumStorage extends TileEntity {
     public int getFuel() {
     	return fuel;
     }
+    
+    /**
+     * 
+     * @param drain
+     * @return The amount of the drain request that was not satisfied
+     */
+    public int drainFuel(int drain) {
+    	int oldFuel = fuel;
+    	fuel = Math.max(fuel - drain, 0);
+    	return Math.max(drain - oldFuel, 0);
+    }
 }
